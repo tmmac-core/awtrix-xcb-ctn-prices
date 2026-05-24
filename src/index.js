@@ -31,6 +31,10 @@ const loop = createDisplayLoop({
   awtrixClient,
   displayRotationMs: config.displayRotationMs,
   priceRefreshMs: config.priceRefreshMs,
+  brightnessDay: config.brightnessDay,
+  brightnessNight: config.brightnessNight,
+  dimStartHour: config.dimStartHour,
+  dimEndHour: config.dimEndHour,
 });
 
 try {
@@ -46,6 +50,9 @@ try {
 
 function createDryRunAwtrixClient() {
   return {
+    async setBrightness(value) {
+      console.log(`[dry-run] setBrightness(${value})`);
+    },
     async showText(text, options) {
       console.log(`[dry-run] ${text} ${JSON.stringify(options)}`);
     },

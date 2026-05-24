@@ -20,6 +20,10 @@ export function readConfig(env = process.env) {
     displayRotationMs: displayRotationSeconds * 1000,
     priceRefreshMs: priceRefreshSeconds * 1000,
     requestTimeoutMs,
+    brightnessDay: readPositiveNumber(env.BRIGHTNESS_DAY, 120),
+    brightnessNight: readPositiveNumber(env.BRIGHTNESS_NIGHT, 20),
+    dimStartHour: readPositiveNumber(env.DIM_START_HOUR, 21),
+    dimEndHour: readPositiveNumber(env.DIM_END_HOUR, 7),
   };
 }
 

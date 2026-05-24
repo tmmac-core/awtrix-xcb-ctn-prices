@@ -13,17 +13,27 @@ export function pickDisplayFrame(prices, index) {
   };
 }
 
+function isNightHour(startHour, endHour) {
+  const hour = new Date().getHours();
+  return hour >= startHour || hour < endHour;
+}
+
 export function createDisplayLoop({
   priceClient,
   awtrixClient,
   displayRotationMs = 10_000,
   priceRefreshMs = 60_000,
+  brightnessDay = 120,
+  brightnessNight = 20,
+  dimStartHour = 21,
+  dimEndHour = 7,
   logger = console,
 }) {
   let latestPrices = null;
   let lastRefresh = 0;
   let frameIndex = 0;
   let stopped = false;
+  let activeBrightness = null;
 
   async function refreshPricesIfNeeded(force = false) {
     const now = Date.now();
@@ -36,8 +46,17 @@ export function createDisplayLoop({
     logger.info(`Prices refreshed at ${latestPrices.fetchedAt?.toISOString?.() || new Date(now).toISOString()}`);
   }
 
+  async function applyBrightnessIfNeeded() {
+    const targetBrightness = isNightHour(dimStartHour, dimEndHour) ? brightnessNight : brightnessDay;
+    if (targetBrightness === activeBrightness) return;
+    await awtrixClient.setBrightness(targetBrightness);
+    activeBrightness = targetBrightness;
+    logger.info(`Brightness set to ${targetBrightness} (${targetBrightness === brightnessNight ? 'night' : 'day'})`);
+  }
+
   async function showNextFrame() {
     await refreshPricesIfNeeded(!latestPrices);
+    await applyBrightnessIfNeeded();
     const frame = pickDisplayFrame(latestPrices, frameIndex);
     frameIndex += 1;
     await awtrixClient.showText(frame.text, { color: frame.color });

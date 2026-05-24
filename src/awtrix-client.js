@@ -1,7 +1,19 @@
 export function createAwtrixClient({ baseUrl, appName, fetchImpl = fetch, requestTimeoutMs = 8000 }) {
   const endpoint = `${baseUrl}/api/custom?name=${encodeURIComponent(appName)}`;
+  const settingsEndpoint = `${baseUrl}/api/settings`;
 
   return {
+    async setBrightness(value) {
+      const response = await fetchWithTimeout(fetchImpl, settingsEndpoint, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ BRI: value }),
+      }, requestTimeoutMs);
+      if (!response.ok) {
+        throw new Error(`AWTRIX settings failed with HTTP ${response.status}`);
+      }
+    },
+
     async showText(text, options = {}) {
       const payload = buildCustomAppPayload(text, options);
       const response = await fetchWithTimeout(fetchImpl, endpoint, {
