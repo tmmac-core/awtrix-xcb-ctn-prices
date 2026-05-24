@@ -11,8 +11,8 @@
 - **Gilt fuer:** Jede Aenderung an Preisformat, Labels, Symbolen, Icons oder Textlaenge auf dem TC001.
 
 ## privacy
-- **Regel:** Echte lokale IPs nur in `.env` oder lokalen Backups speichern; README, `.env.example`, Tests und GitHub duerfen nur Beispiel-IPs enthalten.
-- **Kontext:** Daniel hat explizit nachgefragt, ob die echte Ulanzi-IP in der README steht. Verifiziert wurde: echte IP ist nur in ignorierter `.env`, README nutzt `192.168.1.50`.
+- **Regel:** Echte lokale IPs nur in `.env` oder lokalen Backups speichern; README, `.env.example`, Tests und GitHub nutzen neutrale Hostnamen statt privater Beispiel-IPs.
+- **Kontext:** Daniel hat explizit nachgefragt, ob die echte Ulanzi-IP in der README steht. Danach wurden auch private Beispiel-IPs aus README und `.env.example` entfernt, damit keine lokale Adresse im Repo landet.
 - **Gilt fuer:** Jede Netzwerk-/IoT-Integration mit lokalen Geraeteadressen.
 
 ## shell

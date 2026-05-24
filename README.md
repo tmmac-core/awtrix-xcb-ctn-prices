@@ -27,10 +27,10 @@ cp .env.example .env
 Dann in `.env` mindestens setzen:
 
 ```bash
-TC001_HOST=192.168.1.50
+TC001_HOST=tc001.local
 ```
 
-`TC001_HOST` ist nur Host oder IP. `http://192.168.1.50/` funktioniert auch, wird intern normalisiert.
+`TC001_HOST` ist nur Host oder IP. Eine URL mit `http://` funktioniert auch, wird intern normalisiert.
 
 ## Start
 

@@ -3,7 +3,7 @@ const DEFAULT_PING_TICKERS_URL = 'https://api.ping.exchange/marketdata/api/v1/ti
 export function readConfig(env = process.env) {
   const tc001Host = normalizeHost(env.TC001_HOST);
   if (!tc001Host) {
-    throw new Error('TC001_HOST is required, for example TC001_HOST=192.168.1.50');
+    throw new Error('TC001_HOST is required, for example TC001_HOST=tc001.local');
   }
 
   const displayRotationSeconds = readPositiveNumber(env.DISPLAY_ROTATION_SECONDS, 15);

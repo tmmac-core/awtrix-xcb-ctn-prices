@@ -6,7 +6,7 @@ import { createAwtrixClient } from '../src/awtrix-client.js';
 test('createAwtrixClient posts a custom app payload to AWTRIX HTTP API', async () => {
   const calls = [];
   const client = createAwtrixClient({
-    baseUrl: 'http://192.168.1.50',
+    baseUrl: 'http://tc001.local',
     appName: 'xcb_ctn_prices',
     fetchImpl: async (url, options) => {
       calls.push({ url: String(url), options });
@@ -16,7 +16,7 @@ test('createAwtrixClient posts a custom app payload to AWTRIX HTTP API', async (
 
   await client.showText('XCB.0499', { color: '#00E676' });
 
-  assert.equal(calls[0].url, 'http://192.168.1.50/api/custom?name=xcb_ctn_prices');
+  assert.equal(calls[0].url, 'http://tc001.local/api/custom?name=xcb_ctn_prices');
   assert.equal(calls[0].options.method, 'POST');
   assert.equal(calls[0].options.headers['content-type'], 'application/json');
   assert.deepEqual(JSON.parse(calls[0].options.body), {
@@ -33,7 +33,7 @@ test('createAwtrixClient posts a custom app payload to AWTRIX HTTP API', async (
 test('createAwtrixClient includes an icon when provided', async () => {
   const calls = [];
   const client = createAwtrixClient({
-    baseUrl: 'http://192.168.1.50',
+    baseUrl: 'http://tc001.local',
     appName: 'xcb_ctn_prices',
     fetchImpl: async (url, options) => {
       calls.push({ url: String(url), options });
@@ -48,7 +48,7 @@ test('createAwtrixClient includes an icon when provided', async () => {
 
 test('createAwtrixClient surfaces non-OK HTTP responses', async () => {
   const client = createAwtrixClient({
-    baseUrl: 'http://192.168.1.50',
+    baseUrl: 'http://tc001.local',
     appName: 'xcb_ctn_prices',
     fetchImpl: async () => new Response('bad request', { status: 400 }),
   });
