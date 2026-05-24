@@ -75,12 +75,12 @@ pm2 save
 
 ## Icons
 
-Die mitgelieferten Icons stammen aus den offiziellen SVG-Marks:
+Die mitgelieferten Icons sind fuer die 8x8-Matrix optimiert:
 
-- `https://corecdn.info/mark/256/xcb.svg`
+- XCB nutzt ein handgepixeltes 8x8-Core-Ring-Symbol aus `assets/xcb-8-pixel.svg`.
 - `https://corecdn.info/mark/256/ctn.svg`
 
-Sie wurden auf 8x8 JPG reduziert, weil AWTRIX bei Custom-App-Icons sehr wenig Platz hat. Wenn du im AWTRIX-Webinterface eigene bessere Pixel-Icons hochlaedst, kannst du deren Dateinamen oder Icon-ID ueber `XCB_ICON` und `CTN_ICON` setzen.
+CTN ist aktuell noch aus dem offiziellen SVG auf 8x8 JPG reduziert. Wenn du im AWTRIX-Webinterface eigene bessere Pixel-Icons hochlaedst, kannst du deren Dateinamen oder Icon-ID ueber `XCB_ICON` und `CTN_ICON` setzen.
 
 ## Verify
 
