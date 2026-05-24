@@ -1,0 +1,15 @@
+{
+  "name": "ulanzi-tc001-prices",
+  "version": "0.1.0",
+  "description": "Show rotating XCB and CTN prices on an AWTRIX-powered Ulanzi TC001.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test",
+    "verify": "node --test && TC001_HOST=127.0.0.1 node src/index.js --once --dry-run"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
