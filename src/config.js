@@ -24,6 +24,7 @@ export function readConfig(env = process.env) {
     brightnessNight: readPositiveNumber(env.BRIGHTNESS_NIGHT, 20),
     dimStartHour: readPositiveNumber(env.DIM_START_HOUR, 21),
     dimEndHour: readPositiveNumber(env.DIM_END_HOUR, 7),
+    changeDisplayMs: readPositiveNumber(env.CHANGE_DISPLAY_SECONDS, 9) * 1000,
   };
 }
 

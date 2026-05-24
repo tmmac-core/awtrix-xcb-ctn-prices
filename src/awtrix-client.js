@@ -36,7 +36,7 @@ export function buildCustomAppPayload(text, options = {}) {
     color: options.color || '#FFFFFF',
     center: true,
     textCase: 2,
-    noScroll: true,
+    noScroll: options.noScroll !== false,
     lifetime: options.lifetime ?? 120,
     lifetimeMode: options.lifetimeMode ?? 1,
   };

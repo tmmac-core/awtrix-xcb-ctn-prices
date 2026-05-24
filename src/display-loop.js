@@ -1,15 +1,31 @@
 import { formatPriceLine } from './price-client.js';
 
-const FRAMES = [
+const PRICE_FRAMES = [
   { key: 'xcb', color: '#46B549' },
   { key: 'ctn', color: '#00B74F' },
+  { key: 'change' },
 ];
 
 export function pickDisplayFrame(prices, index) {
-  const frame = FRAMES[index % FRAMES.length];
+  const frame = PRICE_FRAMES[index % PRICE_FRAMES.length];
+  if (frame.key === 'change') {
+    return formatChangeFrame(prices);
+  }
   return {
     text: formatPriceLine(prices[frame.key]),
     color: frame.color,
+    noScroll: true,
+  };
+}
+
+export function formatChangeFrame(prices) {
+  const fmt = (pct) => `${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%`;
+  const text = `XCB${fmt(prices.xcb.changePercent)} CTN${fmt(prices.ctn.changePercent)}`;
+  const avgChange = (prices.xcb.changePercent + prices.ctn.changePercent) / 2;
+  return {
+    text,
+    color: avgChange >= 0 ? '#46B549' : '#FF4444',
+    noScroll: false,
   };
 }
 
@@ -23,6 +39,7 @@ export function createDisplayLoop({
   awtrixClient,
   displayRotationMs = 10_000,
   priceRefreshMs = 60_000,
+  changeDisplayMs = 9_000,
   brightnessDay = 120,
   brightnessNight = 20,
   dimStartHour = 21,
@@ -57,10 +74,12 @@ export function createDisplayLoop({
   async function showNextFrame() {
     await refreshPricesIfNeeded(!latestPrices);
     await applyBrightnessIfNeeded();
+    const isChangeFrame = PRICE_FRAMES[frameIndex % PRICE_FRAMES.length].key === 'change';
     const frame = pickDisplayFrame(latestPrices, frameIndex);
     frameIndex += 1;
-    await awtrixClient.showText(frame.text, { color: frame.color });
+    await awtrixClient.showText(frame.text, { color: frame.color, noScroll: frame.noScroll });
     logger.info(`Displayed ${frame.text}`);
+    return isChangeFrame ? changeDisplayMs : displayRotationMs;
   }
 
   async function runOnce() {
@@ -72,8 +91,9 @@ export function createDisplayLoop({
   async function start() {
     logger.info(`Starting display loop: rotate every ${displayRotationMs}ms, refresh prices every ${priceRefreshMs}ms`);
     while (!stopped) {
+      let sleepMs = displayRotationMs;
       try {
-        await showNextFrame();
+        sleepMs = await showNextFrame();
       } catch (error) {
         logger.error(`Display loop error: ${error.message}`);
         try {
@@ -82,7 +102,7 @@ export function createDisplayLoop({
           logger.error(`Unable to show error on AWTRIX: ${awtrixError.message}`);
         }
       }
-      await sleep(displayRotationMs);
+      await sleep(sleepMs);
     }
   }
 

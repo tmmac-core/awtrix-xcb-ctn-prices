@@ -5,6 +5,8 @@ const DEFAULT_SYMBOLS = {
 const MAX_DISPLAY_CHARS = 8;
 
 export function createPriceClient({ xcbUrl, ctnUrl, fetchImpl = fetch, requestTimeoutMs = 8000 }) {
+  let referencePrices = null;
+
   return {
     async fetchPrices() {
       const [xcb, ctn] = await Promise.all([
@@ -12,13 +14,21 @@ export function createPriceClient({ xcbUrl, ctnUrl, fetchImpl = fetch, requestTi
         fetchTicker({ url: ctnUrl, symbol: 'CTN', fetchImpl, requestTimeoutMs }),
       ]);
 
+      if (!referencePrices) {
+        referencePrices = { xcb: xcb.usd, ctn: ctn.usd };
+      }
+
       return {
-        xcb,
-        ctn,
+        xcb: { ...xcb, changePercent: calcChangePercent(xcb.usd, referencePrices.xcb) },
+        ctn: { ...ctn, changePercent: calcChangePercent(ctn.usd, referencePrices.ctn) },
         fetchedAt: new Date(),
       };
     },
   };
+}
+
+function calcChangePercent(current, reference) {
+  return ((current - reference) / reference) * 100;
 }
 
 export async function fetchTicker({ url, symbol, fetchImpl = fetch, requestTimeoutMs = 8000 }) {

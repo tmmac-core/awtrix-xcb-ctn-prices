@@ -31,6 +31,7 @@ const loop = createDisplayLoop({
   awtrixClient,
   displayRotationMs: config.displayRotationMs,
   priceRefreshMs: config.priceRefreshMs,
+  changeDisplayMs: config.changeDisplayMs,
   brightnessDay: config.brightnessDay,
   brightnessNight: config.brightnessNight,
   dimStartHour: config.dimStartHour,
