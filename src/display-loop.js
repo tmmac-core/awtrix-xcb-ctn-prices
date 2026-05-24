@@ -5,18 +5,12 @@ const FRAMES = [
   { key: 'ctn', color: '#FF9800' },
 ];
 
-export function pickDisplayFrame(prices, index, icons = {}) {
+export function pickDisplayFrame(prices, index) {
   const frame = FRAMES[index % FRAMES.length];
-  const displayFrame = {
+  return {
     text: formatPriceLine(prices[frame.key]),
     color: frame.color,
   };
-
-  if (icons[frame.key]) {
-    displayFrame.icon = icons[frame.key];
-  }
-
-  return displayFrame;
 }
 
 export function createDisplayLoop({
@@ -25,7 +19,6 @@ export function createDisplayLoop({
   displayRotationMs = 10_000,
   priceRefreshMs = 60_000,
   logger = console,
-  icons = {},
 }) {
   let latestPrices = null;
   let lastRefresh = 0;
@@ -45,16 +38,16 @@ export function createDisplayLoop({
 
   async function showNextFrame() {
     await refreshPricesIfNeeded(!latestPrices);
-    const frame = pickDisplayFrame(latestPrices, frameIndex, icons);
+    const frame = pickDisplayFrame(latestPrices, frameIndex);
     frameIndex += 1;
-    await awtrixClient.showText(frame.text, { color: frame.color, icon: frame.icon });
+    await awtrixClient.showText(frame.text, { color: frame.color });
     logger.info(`Displayed ${frame.text}`);
   }
 
   async function runOnce() {
     await refreshPricesIfNeeded(true);
-    const frame = pickDisplayFrame(latestPrices, 0, icons);
-    await awtrixClient.showText(frame.text, { color: frame.color, icon: frame.icon });
+    const frame = pickDisplayFrame(latestPrices, 0);
+    await awtrixClient.showText(frame.text, { color: frame.color });
   }
 
   async function start() {

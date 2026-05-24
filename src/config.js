@@ -6,7 +6,7 @@ export function readConfig(env = process.env) {
     throw new Error('TC001_HOST is required, for example TC001_HOST=192.168.1.50');
   }
 
-  const displayRotationSeconds = readPositiveNumber(env.DISPLAY_ROTATION_SECONDS, 10);
+  const displayRotationSeconds = readPositiveNumber(env.DISPLAY_ROTATION_SECONDS, 15);
   const priceRefreshSeconds = readPositiveNumber(env.PRICE_REFRESH_SECONDS, 60);
   const requestTimeoutMs = readPositiveNumber(env.REQUEST_TIMEOUT_MS, 8000);
   const pingApiBase = stripTrailingSlash(env.PING_API_BASE || DEFAULT_PING_TICKERS_URL);

@@ -4,7 +4,6 @@ import { createAwtrixClient } from './awtrix-client.js';
 import { readConfig } from './config.js';
 import { createDisplayLoop } from './display-loop.js';
 import { loadEnvFile } from './env-file.js';
-import { loadIcons } from './icons.js';
 import { createPriceClient } from './price-client.js';
 
 loadEnvFile();
@@ -32,7 +31,6 @@ const loop = createDisplayLoop({
   awtrixClient,
   displayRotationMs: config.displayRotationMs,
   priceRefreshMs: config.priceRefreshMs,
-  icons: loadIcons(process.env),
 });
 
 try {
