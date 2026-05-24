@@ -2,6 +2,7 @@ const DEFAULT_SYMBOLS = {
   XCB: 'xcb_usdc',
   CTN: 'ctn_usdc',
 };
+const MAX_DISPLAY_CHARS = 9;
 
 export function createPriceClient({ xcbUrl, ctnUrl, fetchImpl = fetch, requestTimeoutMs = 8000 }) {
   return {
@@ -50,14 +51,26 @@ export function parsePingTicker(data, symbol) {
 }
 
 export function formatPriceLine(price) {
-  return `${price.symbol} $${formatUsd(price.usd)}`;
+  const prefix = `${price.symbol} `;
+  return `${prefix}${formatUsd(price.usd, MAX_DISPLAY_CHARS - prefix.length)}`;
 }
 
-function formatUsd(value) {
-  if (value >= 100) return trimTrailingZeros(value.toFixed(2));
-  if (value >= 1) return trimTrailingZeros(value.toFixed(3));
-  if (value >= 0.01) return trimTrailingZeros(value.toFixed(4));
-  return trimTrailingZeros(value.toFixed(5));
+function formatUsd(value, maxChars) {
+  const maxDecimals = value >= 1 ? 4 : 6;
+  for (let decimals = maxDecimals; decimals >= 0; decimals -= 1) {
+    const formatted = trimLeadingZero(trimTrailingZeros(value.toFixed(decimals)));
+    if (formatted.length <= maxChars) {
+      return formatted;
+    }
+  }
+
+  return trimLeadingZero(value.toPrecision(2)).slice(0, maxChars);
+}
+
+function trimLeadingZero(value) {
+  if (value.startsWith('0.')) return value.slice(1);
+  if (value.startsWith('-0.')) return `-${value.slice(2)}`;
+  return value;
 }
 
 function trimTrailingZeros(value) {

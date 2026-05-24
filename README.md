@@ -7,7 +7,7 @@ Kleiner Node.js-Dienst fuer einen Ulanzi TC001 mit AWTRIX/SVITRIX-Firmware. Der 
 - **Node.js ohne Framework:** reicht fuer Fetch, Timer und HTTP-POSTs. Weniger bewegliche Teile als ein Webserver.
 - **Ping Exchange als Default:** dein bestehendes `core-portfolio` nutzt bereits `xcb_usdc` und `ctn_usdc`; die Live-Endpunkte liefern aktuelle Preise ohne API-Key.
 - **AWTRIX HTTP Custom App:** `POST /api/custom?name=...` erzeugt eine dauerhafte Seite im Display-Loop. Das ist besser als Notifications, weil nichts gestapelt oder manuell dismissed werden muss.
-- **Nur Preistext:** es werden keine Icons oder Zusatztexte mitgesendet, damit auf dem 32x8-Display maximal Platz fuer den Preis bleibt.
+- **Nur Preistext:** es werden keine Icons, kein Waehrungszeichen und keine Zusatztexte mitgesendet. Preise werden so gekuerzt, dass sie auf eine 32x8-Seite passen.
 - **PM2 optional:** sinnvoll fuer Dauerbetrieb auf Mac mini, Mini-PC oder Hetzner.
 
 ## Voraussetzungen
@@ -98,6 +98,7 @@ npm run verify
 - Preis-API leer oder Preis `0`: wird verworfen.
 - Preis-API oder AWTRIX-HTTP Timeout: Fehler wird geloggt.
 - Im Loop versucht der Dienst bei Fehlern `PRICE ERR` in Rot anzuzeigen.
+- Normale Preisframes nutzen `noScroll: true`, damit kein Lauftext entsteht.
 - Die AWTRIX-Custom-App nutzt `lifetime: 120` und `lifetimeMode: 1`, damit ein stale Display sichtbar wird, falls keine Updates mehr kommen.
 
 ## Quellen

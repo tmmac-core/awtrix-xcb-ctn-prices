@@ -10,11 +10,11 @@ test('pickDisplayFrame alternates XCB and CTN frames', () => {
   };
 
   assert.deepEqual(pickDisplayFrame(prices, 0), {
-    text: 'XCB $0.0499',
+    text: 'XCB .0499',
     color: '#00E676',
   });
   assert.deepEqual(pickDisplayFrame(prices, 1), {
-    text: 'CTN $0.0068',
+    text: 'CTN .0068',
     color: '#FF9800',
   });
 });
@@ -36,5 +36,5 @@ test('createDisplayLoop refreshes prices once and displays the first frame in on
 
   await loop.runOnce();
 
-  assert.deepEqual(shown, [{ text: 'XCB $0.0499', options: { color: '#00E676' } }]);
+  assert.deepEqual(shown, [{ text: 'XCB .0499', options: { color: '#00E676' } }]);
 });

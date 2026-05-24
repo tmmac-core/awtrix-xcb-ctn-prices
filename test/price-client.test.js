@@ -19,8 +19,13 @@ test('parsePingTicker rejects empty or zero prices', () => {
 });
 
 test('formatPriceLine keeps small token prices readable on a 32x8 display', () => {
-  assert.equal(formatPriceLine({ symbol: 'XCB', usd: 0.0499 }), 'XCB $0.0499');
-  assert.equal(formatPriceLine({ symbol: 'CTN', usd: 0.0068 }), 'CTN $0.0068');
+  assert.equal(formatPriceLine({ symbol: 'XCB', usd: 0.0499 }), 'XCB .0499');
+  assert.equal(formatPriceLine({ symbol: 'CTN', usd: 0.0068 }), 'CTN .0068');
+});
+
+test('formatPriceLine shortens decimals to fit one display page', () => {
+  assert.equal(formatPriceLine({ symbol: 'XCB', usd: 0.123456 }), 'XCB .1235');
+  assert.equal(formatPriceLine({ symbol: 'CTN', usd: 1.23456 }), 'CTN 1.235');
 });
 
 test('createPriceClient fetches XCB and CTN prices from configured endpoints', async () => {
