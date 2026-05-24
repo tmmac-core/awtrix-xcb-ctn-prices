@@ -7,6 +7,7 @@ Kleiner Node.js-Dienst fuer einen Ulanzi TC001 mit AWTRIX/SVITRIX-Firmware. Der 
 - **Node.js ohne Framework:** reicht fuer Fetch, Timer und HTTP-POSTs. Weniger bewegliche Teile als ein Webserver.
 - **Ping Exchange als Default:** dein bestehendes `core-portfolio` nutzt bereits `xcb_usdc` und `ctn_usdc`; die Live-Endpunkte liefern aktuelle Preise ohne API-Key.
 - **AWTRIX HTTP Custom App:** `POST /api/custom?name=...` erzeugt eine dauerhafte Seite im Display-Loop. Das ist besser als Notifications, weil nichts gestapelt oder manuell dismissed werden muss.
+- **Icons direkt im Payload:** die Core/CTN-Logos liegen als 8x8-JPGs in `assets/` und werden als Base64 im AWTRIX-`icon`-Feld mitgesendet. Dadurch musst du die Icons nicht manuell im AWTRIX-Webinterface hochladen.
 - **PM2 optional:** sinnvoll fuer Dauerbetrieb auf Mac mini, Mini-PC oder Hetzner.
 
 ## Voraussetzungen
@@ -69,6 +70,17 @@ pm2 save
 | `REQUEST_TIMEOUT_MS` | `8000` | Timeout fuer Preis- und Display-Requests |
 | `PRICE_API_XCB` | Ping `xcb_usdc` | XCB-Preisquelle |
 | `PRICE_API_CTN` | Ping `ctn_usdc` | CTN-Preisquelle |
+| `XCB_ICON` | `assets/xcb-8.jpg` als Base64 | Optionaler AWTRIX Icon-Wert fuer XCB |
+| `CTN_ICON` | `assets/ctn-8.jpg` als Base64 | Optionaler AWTRIX Icon-Wert fuer CTN |
+
+## Icons
+
+Die mitgelieferten Icons stammen aus den offiziellen SVG-Marks:
+
+- `https://corecdn.info/mark/256/xcb.svg`
+- `https://corecdn.info/mark/256/ctn.svg`
+
+Sie wurden auf 8x8 JPG reduziert, weil AWTRIX bei Custom-App-Icons sehr wenig Platz hat. Wenn du im AWTRIX-Webinterface eigene bessere Pixel-Icons hochlaedst, kannst du deren Dateinamen oder Icon-ID ueber `XCB_ICON` und `CTN_ICON` setzen.
 
 ## Verify
 

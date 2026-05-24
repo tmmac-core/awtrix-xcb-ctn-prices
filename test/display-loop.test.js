@@ -9,13 +9,15 @@ test('pickDisplayFrame alternates XCB and CTN frames', () => {
     ctn: { symbol: 'CTN', usd: 0.0068 },
   };
 
-  assert.deepEqual(pickDisplayFrame(prices, 0), {
+  assert.deepEqual(pickDisplayFrame(prices, 0, { xcb: 'xcb-icon', ctn: 'ctn-icon' }), {
     text: 'XCB $0.0499',
     color: '#00E676',
+    icon: 'xcb-icon',
   });
-  assert.deepEqual(pickDisplayFrame(prices, 1), {
+  assert.deepEqual(pickDisplayFrame(prices, 1, { xcb: 'xcb-icon', ctn: 'ctn-icon' }), {
     text: 'CTN $0.0068',
     color: '#FF9800',
+    icon: 'ctn-icon',
   });
 });
 
@@ -32,9 +34,10 @@ test('createDisplayLoop refreshes prices once and displays the first frame in on
       showText: async (text, options) => shown.push({ text, options }),
     },
     logger: { info() {}, warn() {}, error() {} },
+    icons: { xcb: 'xcb-icon', ctn: 'ctn-icon' },
   });
 
   await loop.runOnce();
 
-  assert.deepEqual(shown, [{ text: 'XCB $0.0499', options: { color: '#00E676' } }]);
+  assert.deepEqual(shown, [{ text: 'XCB $0.0499', options: { color: '#00E676', icon: 'xcb-icon' } }]);
 });

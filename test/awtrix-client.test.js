@@ -30,6 +30,22 @@ test('createAwtrixClient posts a custom app payload to AWTRIX HTTP API', async (
   });
 });
 
+test('createAwtrixClient includes an icon when provided', async () => {
+  const calls = [];
+  const client = createAwtrixClient({
+    baseUrl: 'http://192.168.1.50',
+    appName: 'xcb_ctn_prices',
+    fetchImpl: async (url, options) => {
+      calls.push({ url: String(url), options });
+      return Response.json({ ok: true });
+    },
+  });
+
+  await client.showText('XCB $0.0499', { color: '#00E676', icon: 'abc123' });
+
+  assert.equal(JSON.parse(calls[0].options.body).icon, 'abc123');
+});
+
 test('createAwtrixClient surfaces non-OK HTTP responses', async () => {
   const client = createAwtrixClient({
     baseUrl: 'http://192.168.1.50',

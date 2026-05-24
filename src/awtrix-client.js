@@ -19,7 +19,7 @@ export function createAwtrixClient({ baseUrl, appName, fetchImpl = fetch, reques
 }
 
 export function buildCustomAppPayload(text, options = {}) {
-  return {
+  const payload = {
     text,
     color: options.color || '#FFFFFF',
     center: true,
@@ -28,6 +28,12 @@ export function buildCustomAppPayload(text, options = {}) {
     lifetime: options.lifetime ?? 120,
     lifetimeMode: options.lifetimeMode ?? 1,
   };
+
+  if (options.icon) {
+    payload.icon = options.icon;
+  }
+
+  return payload;
 }
 
 async function fetchWithTimeout(fetchImpl, url, options, timeoutMs) {
