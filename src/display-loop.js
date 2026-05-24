@@ -40,6 +40,7 @@ export function createDisplayLoop({
   displayRotationMs = 10_000,
   priceRefreshMs = 60_000,
   changeDisplayMs = 9_000,
+  changeScrollSpeed = 50,
   brightnessDay = 120,
   brightnessNight = 20,
   dimStartHour = 21,
@@ -77,7 +78,9 @@ export function createDisplayLoop({
     const isChangeFrame = PRICE_FRAMES[frameIndex % PRICE_FRAMES.length].key === 'change';
     const frame = pickDisplayFrame(latestPrices, frameIndex);
     frameIndex += 1;
-    await awtrixClient.showText(frame.text, { color: frame.color, noScroll: frame.noScroll });
+    const opts = { color: frame.color, noScroll: frame.noScroll };
+    if (isChangeFrame) opts.scrollSpeed = changeScrollSpeed;
+    await awtrixClient.showText(frame.text, opts);
     logger.info(`Displayed ${frame.text}`);
     return isChangeFrame ? changeDisplayMs : displayRotationMs;
   }

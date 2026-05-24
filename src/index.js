@@ -32,6 +32,7 @@ const loop = createDisplayLoop({
   displayRotationMs: config.displayRotationMs,
   priceRefreshMs: config.priceRefreshMs,
   changeDisplayMs: config.changeDisplayMs,
+  changeScrollSpeed: config.changeScrollSpeed,
   brightnessDay: config.brightnessDay,
   brightnessNight: config.brightnessNight,
   dimStartHour: config.dimStartHour,

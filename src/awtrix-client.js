@@ -45,6 +45,10 @@ export function buildCustomAppPayload(text, options = {}) {
     payload.icon = options.icon;
   }
 
+  if (options.scrollSpeed !== undefined) {
+    payload.scrollSpeed = options.scrollSpeed;
+  }
+
   return payload;
 }
 

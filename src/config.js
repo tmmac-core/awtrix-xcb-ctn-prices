@@ -25,6 +25,7 @@ export function readConfig(env = process.env) {
     dimStartHour: readPositiveNumber(env.DIM_START_HOUR, 21),
     dimEndHour: readPositiveNumber(env.DIM_END_HOUR, 7),
     changeDisplayMs: readPositiveNumber(env.CHANGE_DISPLAY_SECONDS, 9) * 1000,
+    changeScrollSpeed: readPositiveNumber(env.CHANGE_SCROLL_SPEED, 50),
   };
 }
 

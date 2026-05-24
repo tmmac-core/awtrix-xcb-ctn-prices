@@ -6,6 +6,7 @@ const MAX_DISPLAY_CHARS = 8;
 
 export function createPriceClient({ xcbUrl, ctnUrl, fetchImpl = fetch, requestTimeoutMs = 8000 }) {
   let referencePrices = null;
+  let referenceDate = null;
 
   return {
     async fetchPrices() {
@@ -14,8 +15,10 @@ export function createPriceClient({ xcbUrl, ctnUrl, fetchImpl = fetch, requestTi
         fetchTicker({ url: ctnUrl, symbol: 'CTN', fetchImpl, requestTimeoutMs }),
       ]);
 
-      if (!referencePrices) {
+      const today = localDateString();
+      if (!referencePrices || referenceDate !== today) {
         referencePrices = { xcb: xcb.usd, ctn: ctn.usd };
+        referenceDate = today;
       }
 
       return {
@@ -29,6 +32,14 @@ export function createPriceClient({ xcbUrl, ctnUrl, fetchImpl = fetch, requestTi
 
 function calcChangePercent(current, reference) {
   return ((current - reference) / reference) * 100;
+}
+
+function localDateString() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 export async function fetchTicker({ url, symbol, fetchImpl = fetch, requestTimeoutMs = 8000 }) {
