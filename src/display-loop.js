@@ -1,8 +1,8 @@
 import { formatPriceLine } from './price-client.js';
 
 const FRAMES = [
-  { key: 'xcb', color: '#00E676' },
-  { key: 'ctn', color: '#FF9800' },
+  { key: 'xcb', color: '#46B549' },
+  { key: 'ctn', color: '#00B74F' },
 ];
 
 export function pickDisplayFrame(prices, index) {
