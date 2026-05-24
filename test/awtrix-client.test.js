@@ -14,13 +14,13 @@ test('createAwtrixClient posts a custom app payload to AWTRIX HTTP API', async (
     },
   });
 
-  await client.showText('XCB .0499', { color: '#00E676' });
+  await client.showText('XCB.0499', { color: '#00E676' });
 
   assert.equal(calls[0].url, 'http://192.168.1.50/api/custom?name=xcb_ctn_prices');
   assert.equal(calls[0].options.method, 'POST');
   assert.equal(calls[0].options.headers['content-type'], 'application/json');
   assert.deepEqual(JSON.parse(calls[0].options.body), {
-    text: 'XCB .0499',
+    text: 'XCB.0499',
     color: '#00E676',
     center: true,
     textCase: 2,
@@ -41,7 +41,7 @@ test('createAwtrixClient includes an icon when provided', async () => {
     },
   });
 
-  await client.showText('XCB .0499', { color: '#00E676', icon: 'abc123' });
+  await client.showText('XCB.0499', { color: '#00E676', icon: 'abc123' });
 
   assert.equal(JSON.parse(calls[0].options.body).icon, 'abc123');
 });
@@ -53,5 +53,5 @@ test('createAwtrixClient surfaces non-OK HTTP responses', async () => {
     fetchImpl: async () => new Response('bad request', { status: 400 }),
   });
 
-  await assert.rejects(() => client.showText('XCB .0499'), /AWTRIX request failed/);
+  await assert.rejects(() => client.showText('XCB.0499'), /AWTRIX request failed/);
 });

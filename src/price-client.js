@@ -2,7 +2,7 @@ const DEFAULT_SYMBOLS = {
   XCB: 'xcb_usdc',
   CTN: 'ctn_usdc',
 };
-const MAX_DISPLAY_CHARS = 9;
+const MAX_DISPLAY_CHARS = 8;
 
 export function createPriceClient({ xcbUrl, ctnUrl, fetchImpl = fetch, requestTimeoutMs = 8000 }) {
   return {
@@ -51,7 +51,7 @@ export function parsePingTicker(data, symbol) {
 }
 
 export function formatPriceLine(price) {
-  const prefix = `${price.symbol} `;
+  const prefix = price.symbol;
   return `${prefix}${formatUsd(price.usd, MAX_DISPLAY_CHARS - prefix.length)}`;
 }
 
