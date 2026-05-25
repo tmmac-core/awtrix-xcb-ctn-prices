@@ -1,52 +1,51 @@
 # awtrix-xcb-ctn-prices
 
-Kleiner Node.js-Dienst fuer einen Ulanzi TC001 mit AWTRIX/SVITRIX-Firmware. Der Dienst holt XCB- und CTN-Preise von Ping Exchange und aktualisiert eine AWTRIX-Custom-App im Wechsel.
+A small Node.js service that fetches live XCB and CTN prices from Ping Exchange and pushes them as rotating frames to an AWTRIX-powered Ulanzi TC001.
 
-## Warum dieser Stack
+## Why this stack
 
-- **Node.js ohne Framework:** reicht fuer Fetch, Timer und HTTP-POSTs. Weniger bewegliche Teile als ein Webserver.
-- **Ping Exchange als Default:** dein bestehendes `core-portfolio` nutzt bereits `xcb_usdc` und `ctn_usdc`; die Live-Endpunkte liefern aktuelle Preise ohne API-Key.
-- **AWTRIX HTTP Custom App:** `POST /api/custom?name=...` erzeugt eine dauerhafte Seite im Display-Loop. Das ist besser als Notifications, weil nichts gestapelt oder manuell dismissed werden muss.
-- **Nur Preistext:** es werden keine Icons, kein Waehrungszeichen, kein Leerzeichen und keine Zusatztexte mitgesendet. Preise werden so gekuerzt, dass sie auf eine 32x8-Seite passen.
-- **PM2 optional:** sinnvoll fuer Dauerbetrieb auf Mac mini, Mini-PC oder Hetzner.
+- **Node.js, no framework:** fetch, timers, and HTTP POSTs are all that's needed.
+- **Ping Exchange as default:** provides live `xcb_usdc` and `ctn_usdc` prices with no API key required.
+- **AWTRIX HTTP Custom App:** `POST /api/custom?name=...` creates a persistent page in the display loop — no stacking, no manual dismissal.
+- **Text only:** no icons, no currency symbols, no padding. Prices are trimmed to fit a 32×8 display.
+- **PM2 optional:** useful for always-on setups on a Mini-PC or similar.
 
-## Voraussetzungen
+## Requirements
 
-- Node.js 20 oder neuer
-- Ulanzi TC001 im selben Netzwerk
-- AWTRIX 3, AWTRIX Light oder kompatible SVITRIX-Firmware auf dem TC001
-- IP-Adresse des TC001
+- Node.js 20 or later
+- Ulanzi TC001 on the same network
+- AWTRIX 3, AWTRIX Light, or compatible SVITRIX firmware on the TC001
+- IP address or hostname of the TC001
 
 ## Setup
 
 ```bash
-cd ~/projects/ulanzi-tc001-prices
 cp .env.example .env
 ```
 
-Dann in `.env` mindestens setzen:
+Then set at minimum:
 
 ```bash
-TC001_HOST=tc001.local
+TC001_HOST=tc101.local
 ```
 
-`TC001_HOST` ist nur Host oder IP. Eine URL mit `http://` funktioniert auch, wird intern normalisiert.
+`TC001_HOST` accepts a hostname or IP. A full `http://` URL works too and is normalized internally.
 
-## Start
+## Running
 
-Einmaliger Test ohne TC001-POST:
+Dry run (no display update):
 
 ```bash
 TC001_HOST=127.0.0.1 node src/index.js --once --dry-run
 ```
 
-Einmaliger echter POST an den TC001:
+Single update:
 
 ```bash
 node src/index.js --once
 ```
 
-Dauerbetrieb:
+Continuous loop:
 
 ```bash
 npm start
@@ -59,9 +58,9 @@ pm2 start ecosystem.config.cjs
 pm2 save
 ```
 
-## Ulanzi auf Nur-Preis-Anzeige stellen
+## Show prices only
 
-Die App selbst wechselt XCB und CTN alle 15 Sekunden. Damit AWTRIX keine nativen Apps wie Time, Temperature, Humidity oder Battery dazwischen anzeigt, muessen diese Apps in den Geraete-Settings deaktiviert werden:
+The service rotates XCB, CTN, and a change frame on its own. To prevent AWTRIX native apps (time, temperature, humidity, battery) from appearing between frames, disable them via the settings API:
 
 ```bash
 curl -X POST "http://$TC001_HOST/api/settings" \
@@ -71,25 +70,26 @@ curl -X POST "http://$TC001_HOST/api/settings" \
 curl -X POST "http://$TC001_HOST/api/reboot"
 ```
 
-Der Reboot ist noetig, weil AWTRIX native Apps erst danach wirklich aus dem Loop entfernt.
+A reboot is required for AWTRIX to remove native apps from the loop.
 
-## Konfiguration
+## Configuration
 
-| Variable | Default | Bedeutung |
+| Variable | Default | Description |
 |---|---:|---|
-| `TC001_HOST` | erforderlich | IP oder Hostname des TC001 |
-| `AWTRIX_APP_NAME` | `xcb_ctn_prices` | Name der AWTRIX-Custom-App |
-| `DISPLAY_ROTATION_SECONDS` | `15` | Wechsel zwischen XCB- und CTN-Frame (Sekunden) |
-| `PRICE_REFRESH_SECONDS` | `60` | Preisabruf-Intervall (Sekunden) |
-| `REQUEST_TIMEOUT_MS` | `8000` | Timeout fuer Preis- und Display-Requests (ms) |
-| `PRICE_API_XCB` | Ping `xcb_usdc` | XCB-Preisquelle |
-| `PRICE_API_CTN` | Ping `ctn_usdc` | CTN-Preisquelle |
-| `BRIGHTNESS_DAY` | `120` | Helligkeit tagsüber (0–255) |
-| `BRIGHTNESS_NIGHT` | `20` | Helligkeit nachts (0–255) |
-| `DIM_START_HOUR` | `21` | Ab dieser Stunde (0–23) gilt Nacht-Helligkeit |
-| `DIM_END_HOUR` | `7` | Ab dieser Stunde gilt wieder Tag-Helligkeit |
-| `CHANGE_DISPLAY_SECONDS` | `9` | Anzeigedauer des Change-Frames (Sekunden) |
-| `CHANGE_SCROLL_SPEED` | `50` | Scroll-Geschwindigkeit des Change-Frames (ms/Pixel, höher = langsamer) |
+| `TC001_HOST` | required | IP or hostname of the TC001 |
+| `AWTRIX_APP_NAME` | `xcb_ctn_prices` | AWTRIX custom app name |
+| `DISPLAY_ROTATION_SECONDS` | `15` | Seconds per price frame |
+| `PRICE_REFRESH_SECONDS` | `60` | Price fetch interval in seconds |
+| `REQUEST_TIMEOUT_MS` | `8000` | Timeout for price and display requests (ms) |
+| `PRICE_API_XCB` | Ping `xcb_usdc` | XCB price endpoint |
+| `PRICE_API_CTN` | Ping `ctn_usdc` | CTN price endpoint |
+| `BRIGHTNESS_DAY` | `120` | Display brightness during the day (0–255) |
+| `BRIGHTNESS_NIGHT` | `20` | Display brightness at night (0–255) |
+| `DIM_START_HOUR` | `21` | Hour (0–23) when night brightness kicks in |
+| `DIM_END_HOUR` | `7` | Hour (0–23) when day brightness resumes |
+| `CHANGE_DISPLAY_SECONDS` | `9` | Duration of the change frame in seconds |
+| `CHANGE_SCROLL_SPEED` | `50` | Change frame scroll speed (ms/pixel, higher = slower) |
+
 ## Verify
 
 ```bash
@@ -97,18 +97,18 @@ npm test
 npm run verify
 ```
 
-`npm run verify` fuehrt die Tests aus, holt Live-Preise von Ping Exchange und gibt den ersten Display-Frame als Dry-Run aus.
+`npm run verify` runs the tests, fetches live prices from Ping Exchange, and outputs the first display frame as a dry run.
 
-## Fehlerverhalten
+## Error handling
 
-- Preis-API leer oder Preis `0`: wird verworfen.
-- Preis-API oder AWTRIX-HTTP Timeout: Fehler wird geloggt.
-- Im Loop versucht der Dienst bei Fehlern `PRICE ERR` in Rot anzuzeigen.
-- Normale Preisframes nutzen `noScroll: true`, damit kein Lauftext entsteht.
-- Die AWTRIX-Custom-App nutzt `lifetime: 120` und `lifetimeMode: 1`, damit ein stale Display sichtbar wird, falls keine Updates mehr kommen.
+- Empty or zero price from the API: discarded, previous price is kept.
+- API or AWTRIX HTTP timeout: error is logged.
+- On loop errors: the service attempts to show `PRICE ERR` in red on the display.
+- Price frames use `noScroll: true` to prevent scrolling on short text.
+- The custom app uses `lifetime: 120` and `lifetimeMode: 1` so a stale display becomes visible if updates stop.
 
-## Quellen
+## Sources
 
-- AWTRIX/SVITRIX Custom Apps nutzen HTTP `POST /api/custom?name=...` und akzeptieren Payload-Felder wie `text`, `color`, `lifetime` und `lifetimeMode`.
-- Native AWTRIX-Apps wie Time/Temperature/Humidity/Battery werden ueber `POST /api/settings` deaktiviert und brauchen danach einen Reboot.
-- Ping Exchange liefert Marktdaten ueber `/marketdata/api/v1/tickers` fuer Paare wie `xcb_usdc` und `ctn_usdc`.
+- AWTRIX/SVITRIX Custom Apps: `POST /api/custom?name=...` with fields like `text`, `color`, `lifetime`, `lifetimeMode`.
+- Native AWTRIX apps: disabled via `POST /api/settings`, requires reboot to take effect.
+- Ping Exchange market data: `/marketdata/api/v1/tickers?symbol=xcb_usdc` and `ctn_usdc`.
