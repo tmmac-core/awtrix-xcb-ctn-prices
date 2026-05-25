@@ -1,4 +1,4 @@
-# Ulanzi TC001 XCB/CTN Price Display
+# awtrix-xcb-ctn-prices
 
 Kleiner Node.js-Dienst fuer einen Ulanzi TC001 mit AWTRIX/SVITRIX-Firmware. Der Dienst holt XCB- und CTN-Preise von Ping Exchange und aktualisiert eine AWTRIX-Custom-App im Wechsel.
 
@@ -79,11 +79,17 @@ Der Reboot ist noetig, weil AWTRIX native Apps erst danach wirklich aus dem Loop
 |---|---:|---|
 | `TC001_HOST` | erforderlich | IP oder Hostname des TC001 |
 | `AWTRIX_APP_NAME` | `xcb_ctn_prices` | Name der AWTRIX-Custom-App |
-| `DISPLAY_ROTATION_SECONDS` | `15` | Wechsel zwischen XCB und CTN |
-| `PRICE_REFRESH_SECONDS` | `60` | Preisabruf-Intervall |
-| `REQUEST_TIMEOUT_MS` | `8000` | Timeout fuer Preis- und Display-Requests |
+| `DISPLAY_ROTATION_SECONDS` | `15` | Wechsel zwischen XCB- und CTN-Frame (Sekunden) |
+| `PRICE_REFRESH_SECONDS` | `60` | Preisabruf-Intervall (Sekunden) |
+| `REQUEST_TIMEOUT_MS` | `8000` | Timeout fuer Preis- und Display-Requests (ms) |
 | `PRICE_API_XCB` | Ping `xcb_usdc` | XCB-Preisquelle |
 | `PRICE_API_CTN` | Ping `ctn_usdc` | CTN-Preisquelle |
+| `BRIGHTNESS_DAY` | `120` | Helligkeit tagsüber (0–255) |
+| `BRIGHTNESS_NIGHT` | `20` | Helligkeit nachts (0–255) |
+| `DIM_START_HOUR` | `21` | Ab dieser Stunde (0–23) gilt Nacht-Helligkeit |
+| `DIM_END_HOUR` | `7` | Ab dieser Stunde gilt wieder Tag-Helligkeit |
+| `CHANGE_DISPLAY_SECONDS` | `9` | Anzeigedauer des Change-Frames (Sekunden) |
+| `CHANGE_SCROLL_SPEED` | `50` | Scroll-Geschwindigkeit des Change-Frames (ms/Pixel, höher = langsamer) |
 ## Verify
 
 ```bash

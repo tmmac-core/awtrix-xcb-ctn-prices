@@ -1,5 +1,5 @@
 {
-  "name": "ulanzi-tc001-prices",
+  "name": "awtrix-xcb-ctn-prices",
   "version": "0.1.0",
   "description": "Show rotating XCB and CTN prices on an AWTRIX-powered Ulanzi TC001.",
   "type": "module",
