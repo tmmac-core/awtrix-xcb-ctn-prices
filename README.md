@@ -112,3 +112,17 @@ npm run verify
 - AWTRIX/SVITRIX Custom Apps: `POST /api/custom?name=...` with fields like `text`, `color`, `lifetime`, `lifetimeMode`.
 - Native AWTRIX apps: disabled via `POST /api/settings`, requires reboot to take effect.
 - Ping Exchange market data: `/marketdata/api/v1/tickers?symbol=xcb_usdc` and `ctn_usdc`.
+
+## Verzeichnisstruktur
+
+```
+src/index.js         → Einstiegspunkt
+src/display-loop.js  → Anzeige-Schleife auf dem Gerät
+src/price-client.js  → Kursabruf
+src/awtrix-client.js → Anbindung an das AWTRIX-Display
+src/icons.js         → Icon-Definitionen
+src/config.js        → Konfiguration
+assets/              → Icons und statische Dateien
+test/                → Tests
+```
+
