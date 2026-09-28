@@ -126,3 +126,6 @@ assets/              → Icons und statische Dateien
 test/                → Tests
 ```
 
+## Lizenz
+
+MIT, siehe [LICENSE](LICENSE).
