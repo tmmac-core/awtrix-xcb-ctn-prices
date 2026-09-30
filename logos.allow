@@ -1,0 +1,2 @@
+# Bewusste Logo-Ableitungen, geprueft mit: python3 ~/projects/logos/scripts/logos.py audit .
+assets/xcb-8-pixel.svg  # 8x8-Pixel-Nachzeichnung der XCB-Marke fuer die AWTRIX-LED-Matrix; ein Vektor-Original ist auf 8 Pixeln nicht darstellbar
